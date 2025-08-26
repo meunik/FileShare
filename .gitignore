@@ -28,3 +28,5 @@ FIX-500-ERROR.md
 FIXES.md
 teste.txt
 .env.docker
+.github
+.vscode
