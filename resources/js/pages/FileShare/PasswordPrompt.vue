@@ -2,6 +2,8 @@
 import { Head, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import ThemeToggle from '@/components/FileShare/ThemeToggle.vue';
+import Logo from '@/../../public/favicon.svg';
+import { Icon } from '@iconify/vue';
 
 interface Props {
   identifier: string;
@@ -88,9 +90,7 @@ const goHome = () => router.visit('/');
 
     <div class="bg-white dark:bg-zinc-900/40 rounded-lg shadow-xl p-8">
       <div class="text-center mb-6">
-        <svg class="mx-auto h-12 w-12 text-yellow-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m0 0v2m0-2h2m-2 0H10m9-7a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
+        <Icon icon="ph:key-fill" class="mx-auto h-12 w-12 text-yellow-500 mb-4" />
         <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-2">
           Esta página é protegida por senha
         </h2>

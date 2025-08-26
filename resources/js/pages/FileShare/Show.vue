@@ -61,7 +61,7 @@ const goHome = () => router.visit('/');
   <!-- Header -->
   <div class="backdrop-blur-sm">
     <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-      <div class="flex items-center space-x-2 sm:space-x-4">
+      <div class="flex items-center space-x-2">
         <button
           @click="goHome"
           class="text-blue-600 hover:text-blue-700 dark:text-blue-400 flex items-center sm:space-x-2 hover:underline cursor-pointer"
@@ -74,9 +74,7 @@ const goHome = () => router.visit('/');
         <div class="text-sm text-gray-500 dark:text-gray-400">|</div>
         <h1 class="text-xl font-semibold text-gray-900 dark:text-white break-all line-clamp-1">{{ identifier }}</h1>
         <div v-if="hasPassword" class="flex items-center">
-          <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-2 0h4m-2 0h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
+          <Icon icon="ph:key-fill" class="w-4 h-4 text-yellow-500" />
         </div>
       </div>
       <div class="text-sm text-gray-500 dark:text-gray-400 text-nowrap whitespace-nowrap flex items-center space-x-1 px-2">
