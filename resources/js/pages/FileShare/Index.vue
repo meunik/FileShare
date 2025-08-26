@@ -12,10 +12,9 @@ const createShare = () => {
     alert('O identificador não pode ter mais de 255 caracteres.');
     return;
   }
-  
+
   isCreating.value = true;
-  
-  // Redireciona para a página de compartilhamento
+
   router.visit(`/${identifier.value.trim()}`, {
     onFinish: () => { isCreating.value = false }
   });
@@ -36,21 +35,12 @@ const handleKeyPress = (event: KeyboardEvent) => {
       <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
         FileShare
       </h1>
-      <!-- <p class="text-gray-600 dark:text-gray-400">
-        Compartilhe arquivos de forma rápida e segura
-      </p> -->
     </div>
 
     <div class="bg-white dark:bg-zinc-900/40 rounded-lg shadow-xl p-8">
-      <!-- <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 text-center">
-        Criar nova página de compartilhamento
-      </h2> -->
       
       <div class="space-y-4">
         <div>
-          <!-- <label for="identifier" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Nome da página
-          </label> -->
           <input
             id="identifier"
             v-model="identifier"
@@ -61,9 +51,6 @@ const handleKeyPress = (event: KeyboardEvent) => {
             @keypress="handleKeyPress"
             :disabled="isCreating"
           />
-          <!-- <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-            Máximo 255 caracteres. Este será o identificador único da sua página.
-          </p> -->
         </div>
 
         <button
