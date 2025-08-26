@@ -5,9 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\FileUploadRequest;
 use App\Models\FileShare;
 use App\Models\UploadedFile;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -28,12 +25,10 @@ class FileShareController extends Controller
      */
     public function show(string $identifier)
     {
-        // Busca o compartilhamento existente ou cria um novo objeto vazio
         $fileShare = FileShare::where('identifier', $identifier)->first();
         
         $existingFiles = [];
         if ($fileShare) {
-            // Remove arquivos expirados automaticamente
             $this->cleanupExpiredFiles($fileShare);
             
             $existingFiles = $fileShare->activeFiles->map(function ($file) {
@@ -59,7 +54,6 @@ class FileShareController extends Controller
      */
     public function upload(FileUploadRequest $request, string $identifier)
     {
-        // Verifica se o identificador já existe e se tem espaço para mais arquivos
         $fileShare = FileShare::where('identifier', $identifier)->first();
         
         if ($fileShare) {
@@ -73,7 +67,6 @@ class FileShareController extends Controller
                 ], 422);
             }
         } else {
-            // Cria o compartilhamento se não existir
             $fileShare = FileShare::create(['identifier' => $identifier]);
         }
 
@@ -99,7 +92,6 @@ class FileShareController extends Controller
         // Limite máximo de 24 horas (86400 segundos)
         $maxDuration = 24 * 3600;
         $limitReached = false;
-        $originalDuration = $durationInSeconds;
         
         if ($durationInSeconds > $maxDuration) {
             $durationInSeconds = $maxDuration;
@@ -112,17 +104,11 @@ class FileShareController extends Controller
             $extension = $file->getClientOriginalExtension();
             $size = $file->getSize();
             $mimeType = $file->getMimeType();
-            
-            // Gera um nome único para o arquivo
+
             $storedName = Str::uuid() . '.' . $extension;
-            
-            // Armazena o arquivo no storage privado
             $path = $file->storeAs('uploads', $storedName, 'local');
-            
-            // Calcula a data de expiração
             $expiresAt = Carbon::now()->addSeconds($durationInSeconds);
-            
-            // Salva no banco de dados
+
             $uploadedFile = UploadedFile::create([
                 'file_share_id' => $fileShare->id,
                 'original_name' => $originalName,
@@ -181,8 +167,6 @@ class FileShareController extends Controller
         try {
             $fileShare = $file->fileShare;
             $file->delete();
-            
-            // Verifica se a página não tem mais arquivos e remove o identificador
             $this->cleanupEmptyFileShare($fileShare);
             
             return response()->json([
@@ -202,16 +186,9 @@ class FileShareController extends Controller
      */
     public function download(UploadedFile $file)
     {
-        if ($file->is_expired) {
-            abort(404, 'Arquivo expirado ou não encontrado.');
-        }
-
+        if ($file->is_expired) abort(404, 'Arquivo expirado ou não encontrado.');
         $filePath = storage_path('app/private/uploads/' . $file->stored_name);
-        
-        if (!file_exists($filePath)) {
-            abort(404, 'Arquivo não encontrado.');
-        }
-
+        if (!file_exists($filePath)) abort(404, 'Arquivo não encontrado.');
         return response()->download($filePath, $file->original_name);
     }
 
@@ -221,12 +198,7 @@ class FileShareController extends Controller
     private function cleanupExpiredFiles(FileShare $fileShare)
     {
         $expiredFiles = $fileShare->uploadedFiles()->where('expires_at', '<=', now())->get();
-        
-        foreach ($expiredFiles as $file) {
-            $file->delete();
-        }
-        
-        // Verifica se a página ficou vazia após a limpeza
+        foreach ($expiredFiles as $file) $file->delete();
         $this->cleanupEmptyFileShare($fileShare);
     }
 
@@ -235,15 +207,8 @@ class FileShareController extends Controller
      */
     private function cleanupEmptyFileShare(FileShare $fileShare)
     {
-        // Recarrega para ter certeza dos dados atuais
         $fileShare->refresh();
-        
-        // Conta apenas arquivos não expirados
         $activeFilesCount = $fileShare->uploadedFiles()->where('expires_at', '>', now())->count();
-        
-        // Se não há mais arquivos ativos, remove o identificador
-        if ($activeFilesCount === 0) {
-            $fileShare->delete();
-        }
+        if ($activeFilesCount === 0) $fileShare->delete();
     }
 }
