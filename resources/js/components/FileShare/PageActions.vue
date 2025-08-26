@@ -17,8 +17,8 @@ const pagePassword = ref('');
 
 // Computed para verificar se deve mostrar as configurações
 const shouldShowSettings = computed(() => {
-  // Mostra apenas se a página já existe (tem arquivos, senha ou foi criada)
-  return props.pageExists;
+  // Mostra apenas se a página tem senha
+  return props.hasPassword;
 });
 
 onMounted(() => {
@@ -139,12 +139,12 @@ const deletePage = async () => {
       </div>
 
       <!-- Exibir senha se disponível -->
-      <div v-if="hasPassword && pagePassword" class="space-y-2">
+      <div v-if="hasPassword" class="space-y-2">
         <div class="flex justify-between text-sm">
           <span class="text-gray-500 dark:text-gray-400">Senha:</span>
           <div class="flex items-center space-x-2">
             <span class="text-gray-900 dark:text-white font-mono text-xs">
-              {{ showPassword ? pagePassword : '•'.repeat(pagePassword.length) }}
+              {{ showPassword ? (pagePassword || 'Não disponível') : '•'.repeat(pagePassword?.length || 8) }}
             </span>
             <button
               @click="togglePasswordVisibility"
@@ -163,6 +163,7 @@ const deletePage = async () => {
               @click="copyPassword"
               class="text-blue-600 hover:text-blue-700 dark:text-blue-400"
               title="Copiar senha"
+              :disabled="!pagePassword"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />

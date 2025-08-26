@@ -49,6 +49,11 @@ const createShare = async () => {
     const result = await response.json();
 
     if (result.success) {
+      // Se a página foi criada com senha, salva no sessionStorage
+      if (hasPassword.value) {
+        sessionStorage.setItem(`page_password_${identifier.value}`, password.value);
+      }
+      
       if (result.message) {
         message.value = result.message;
         setTimeout(() => {
