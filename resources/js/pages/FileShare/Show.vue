@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
+import ThemeToggle from '@/components/FileShare/ThemeToggle.vue';
+import { Icon } from '@iconify/vue';
 
 interface ExistingFile {
   id: number;
@@ -177,26 +179,29 @@ const goHome = () => router.visit('/')
 <template>
 <Head :title="`Compartilhamento: ${identifier}`" />
 
-<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-zinc-900 dark:to-black">
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-zinc-900 dark:to-black relative">
   <!-- Header -->
   <div class="backdrop-blur-sm">
     <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-      <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-2 sm:space-x-4">
         <button
           @click="goHome"
-          class="text-blue-600 hover:text-blue-700 dark:text-blue-400 flex items-center space-x-2 hover:underline cursor-pointer"
+          class="text-blue-600 hover:text-blue-700 dark:text-blue-400 flex items-center sm:space-x-2 hover:underline cursor-pointer"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
-          <span>Voltar</span>
+          <span class="hidden sm:block">Voltar</span>
         </button>
         <div class="text-sm text-gray-500 dark:text-gray-400">|</div>
-        <h1 class="text-xl font-semibold text-gray-900 dark:text-white">{{ identifier }}</h1>
+        <h1 class="text-xl font-semibold text-gray-900 dark:text-white break-all line-clamp-1">{{ identifier }}</h1>
       </div>
-      <div class="text-sm text-gray-500 dark:text-gray-400">
-        {{ existingFiles.length }}/{{ maxFiles }} arquivos
+      <div class="text-sm text-gray-500 dark:text-gray-400 text-nowrap whitespace-nowrap flex items-center space-x-1 px-2">
+        <span>{{ existingFiles.length }}/{{ maxFiles }}</span>
+        <span class="hidden sm:block">arquivos</span>
+        <Icon class="sm:hidden" icon="ph:file" />
       </div>
+      <ThemeToggle relative />
     </div>
   </div>
 

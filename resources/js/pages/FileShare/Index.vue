@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import ThemeToggle from '@/components/FileShare/ThemeToggle.vue';
 
 const identifier = ref('');
 const isCreating = ref(false);
@@ -28,7 +29,9 @@ const handleKeyPress = (event: KeyboardEvent) => {
 <template>
 <Head title="Compartilhamento de Arquivos" />
 
-<div class="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-6 dark:from-zinc-900 dark:to-black">
+<div class="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-6 dark:from-zinc-900 dark:to-black relative">
+  <ThemeToggle />
+
   <div class="w-full max-w-md">
 
     <div class="text-center mb-6">
